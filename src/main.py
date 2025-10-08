@@ -30,8 +30,9 @@ def main():
     input("Enter any key to start....")
     #os.system("cls")
     pl = Player('Player', 0)
+    print(pl)
 
-    sceneTest = Scene()
+    sceneTest = Scene(5,3)
     sceneTest.map.Insert(sceneTest.map.__charPlayer__, Point(4,0))
 
     while(True):

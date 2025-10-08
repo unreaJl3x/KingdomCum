@@ -1,6 +1,4 @@
-from unittest import case
-
-from src.Person.Attributes import Attributes
+from Person.Attributes import Attributes
 
 def GetRaceFromId(num:int)->str:
     match num:
