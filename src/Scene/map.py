@@ -13,8 +13,8 @@ class MapPoint():
 class Map:
     def __init__(self, sizeX:int, sizeY:int):
         self.map = list(range(sizeX*sizeY))
-        self.sizeY = sizeX
-        self.sizeX = sizeY
+        self.sizeY = sizeY
+        self.sizeX = sizeX
 
         self.__charChest__ = MapPoint(char="c", objName="chest")
         self.__charPlayer__ = MapPoint(char="p", objName="player")
@@ -26,30 +26,39 @@ class Map:
             self.map[i] = self.__charEmpty__
 
     def Move(self, posStart : Point, posEnd : Point) -> bool:
-        print("q")
+        if (posEnd.x+posEnd.y*self.sizeX <0 or posEnd.x+posEnd.y*self.sizeX>self.sizeY*self.sizeX): return False
+        if (self.map[posEnd.x+posEnd.y*self.sizeX]==self.__charEmpty__):
+            a = self.map[posEnd.x+posEnd.y*self.sizeX]
+            #print(posStart, " ", posStart.y*self.sizeX , " sum: ", posStart.x+posStart.y*self.sizeX , " char:", self.map[posStart.x+posStart.y*self.sizeX])
+            self.map[posEnd.x+posEnd.y*self.sizeX] = self.map[posStart.x+posStart.y*self.sizeX ]
+            self.map[posStart.x+posStart.y*self.sizeX] = a
+            #print(a)
+            return True
+
+        return False
 
     def print(self):
         for i in range(len(self.map)):
             if (i%self.sizeY == 0):print("")
             print(self.map[i],end="")
         print("")
-
-    def Find(self, char:str, count:int=0) -> Point:
+    """Bad request, return [point(-1,-1)], else [point, mapPoint]"""
+    def Find(self, char:str, count:int=0) -> list():
         for i in range(len(self.map)):
             if (self.map[i] == char):
-                return Point(i%self.sizeY, i//self.sizeY)
-        return Point(-1,-1)
+                return [Point(i%self.sizeX, i//self.sizeX), self.map[i]]
+        return [Point(-1,-1)]
 
     """-1 -> all map"""
     def Clear(self, count:int=-1):
         for i in range(len(self.map)): self.map[i] = self.__charEmpty__
 
-    def Insert(self, char:str, p:Point, isNull:bool=True)->bool:
-        if (    (isNull and self.map[p.x+p.y*self.sizeX] != self.__charEmpty__) or
+    def Insert(self, char:str, p:Point, obj = None, objName:str = None, canInter:bool = False)->bool:
+        if (    (self.map[p.x+p.y*self.sizeX] != self.__charEmpty__) or
                         p.x + p.y*self.sizeY >= len(self.map)
         ): return False
 
-        self.map[ p.x + p.y*self.sizeY ] = char
+        self.map[ p.x + p.y*self.sizeY ] =  MapPoint(char=char, objName=objName, inter=canInter, obj=obj)
         return True
 
     def GetObj(self,p:Point):

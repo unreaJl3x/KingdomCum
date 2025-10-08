@@ -12,8 +12,9 @@ def randfomNameConsole():
               "Я РУССКИЙ!!!",
               "Владимир Путин молодец"]
     os.system("title ",titles[random.randint(0,len(titles)-1)])
+
 def logo():
-    print("""
+    print(""" 
 ____  __.__                   .___             _________                
 |    |/ _|__| ____    ____   __| _/____   _____ \_   ___ \ __ __  _____  
 |      < |  |/    \  / ___\ / __ |/  _ \ /     \/    \  \/|  |  \/     \ 
@@ -29,19 +30,14 @@ def main():
     input("Enter any key to start....")
     #os.system("cls")
     pl = Player('Player', 0)
-    print(pl)
-    map = Map(sizeX=5,sizeY=3)
-
-    if ( not map.Insert(map.__charPlayer__, Point(4,0))): print("Err cant insert")
-    print("Find player on ", map.Find(map.__charPlayer__,0))
 
     sceneTest = Scene()
-    sceneTest.map = map
+    sceneTest.map.Insert(sceneTest.map.__charPlayer__, Point(4,0))
 
     while(True):
         sceneTest.PrintMap()
-        #input()
         sceneTest.PlController()
+
         time.sleep(0.1)
 
 main()
