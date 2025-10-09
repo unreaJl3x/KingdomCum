@@ -1,13 +1,14 @@
 from src.kingdomdef import *
 from src.Person.Entity import *
 
+"""Races: 0- Human; 1- Elf, 2- Orc"""
 class Person(Entity):
     __directionForward__ = 0
     __directionBack__ = 1
     __directionRight__ = 2
     __directionLeft__ = 3
 
-    def __init__(self, name : str, race : int, aggresive:int = 0, char:str="e"):
+    def __init__(self, name : str, race : int, aggresive:int = 0, char:str="P"):
         Entity.__init__(self, name, char)
         self.aggresive = 0
         self.race = race

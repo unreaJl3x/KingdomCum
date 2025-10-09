@@ -4,13 +4,13 @@ from src.Person.Person import Person
 from src.player import *
 
 class MapPoint():
-    def __init__(self,char:str, inter:bool=False, obj = None):
+    def __init__(self,char:str='e', inter:bool=False, obj = None):
         self.char = char
         self.interacteble = inter
         self.obj = obj
 
     def __str__(self):
-        return f"{self.char}"
+        return self.char
 
 class Map:
     __charPlayer__ = MapPoint(char='p')
@@ -36,13 +36,9 @@ class Map:
         return -1
 
     def Move(self, posStart : Point, posEnd : Point) -> bool:
+        self.map[posStart.x + posStart.y * self.sizeX].obj.lastDirection = self.GetDirection(posStart, posEnd)
         if (posEnd.x+posEnd.y*self.sizeX <0 or posEnd.x+posEnd.y*self.sizeX>self.sizeY*self.sizeX): return False
         if (self.map[posEnd.x+posEnd.y*self.sizeX]==self.__charEmpty__):
-
-            #if (type(self.map[posStart.x+posStart.y*self.sizeX]) == Player):
-            self.map[posStart.x+posStart.y*self.sizeX].obj.lastDirection = self.GetDirection(posStart, posEnd)
-            print("set Direction!!!!!!!!!!!")
-
             a = self.map[posEnd.x+posEnd.y*self.sizeX]
             self.map[posEnd.x+posEnd.y*self.sizeX] = self.map[posStart.x+posStart.y*self.sizeX ]
             self.map[posStart.x+posStart.y*self.sizeX] = a
@@ -75,9 +71,11 @@ class Map:
         if (    (self.map[p.x+p.y*self.sizeX] != self.__charEmpty__) or
                         p.x + p.y*self.sizeY >= len(self.map)
         ): return False
-
         self.map[ p.x + p.y*self.sizeY ] =  MapPoint(char=char, inter=canInter, obj=obj)
         return True
 
     def GetObj(self,p:Point):
         return self.map[p.x+p.y*self.sizeX].obj
+
+    def PointToInt(self, p:Point)->int:
+        return p.x+p.y*self.sizeX

@@ -1,6 +1,7 @@
 import random
 import os
 from player import *
+from Messenger import * # каждый круг будет проверять сообщения. через него будем хуярить глобальные по типу описания пещер наверное?
 from Scene.SceneController import Scene
 from Scene.map import *
 import time
@@ -29,26 +30,19 @@ def main():
     logo()
     input("Enter any key to start....")
     #os.system("cls")
+    pl = Player('Player', 0)
 
     sceneTest = Scene(5,3)
-    enemy = Person("orc",0,10)
-    sceneTest.map.Insert(enemy.char,Point(3,0),enemy,True)
+    sceneTest.Insert(pl.char, Point(0,0),pl)
+    enemy = Person("Abramov",1,10,char='e')
+    sceneTest.Insert(enemy.char, Point(3,0),enemy,True)
+
+    enemy.inter.AddInteraction(Interact("say","I am rockstar",False))
 
     while(True):
         sceneTest.PrintMap()
+        #if sceneTest.GetPlayer().state == 0 :
         sceneTest.PlController()
-        sceneTest.map.print()
         time.sleep(0.1)
 
 main()
-
-
-def zagadka(text:str, answer:str, errors:int) -> bool:
-    print(text)
-    for i in range(errors):
-        if (input() == answer):
-            return True
-        print("lol")
-    return False
-
-##print(zagadka("24+3","27",3))

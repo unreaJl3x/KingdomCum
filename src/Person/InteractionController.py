@@ -8,8 +8,8 @@ class Interact:
 
 class InteractionController:
     def __init__(self):
-        self.__interacts__ = list(range(10))
+        self.__interacts__ = list()
     def AddInteraction(self,interact:Interact):
-        self.interacts.append(interact)
+        self.__interacts__.append(interact)
     def RemoveInteraction(self,interact:Interact):
-        self.interacts.remove(interact)
+        self.__interacts__.remove(interact)

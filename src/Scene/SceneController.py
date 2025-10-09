@@ -3,18 +3,19 @@ from src.kingdomdef import *
 from termcolor import colored
 from src.player import *
 import os
+class Sprite:
+    def __init__(self, name:str):
+        print("HUI")
 
 class Scene:
     def __init__(self,sizeX:int =5,sizeY:int =3):
         self.map = Map(sizeX,sizeY)
         pl = Player("pl",0)
-        self.map.Insert(pl.char,Point(0,0),obj=pl)
-        #self.map.print()
         self.__interacts__ =  list()
         self.__interacts__.append("WALK [w/a/s/d]")
-        #self.__interacts__.append("ROTATE [a/d]")
         self.__interacts__.append("INTERACT WITH OBJECT [e]")
         self.__interacts__.append("FIGHT [f]")
+        self.sprites = dict()
 
     @staticmethod
     def GetPointOnDirection(dir:int)->Point:
@@ -23,6 +24,9 @@ class Scene:
             case Person.__directionRight__: return Point(1,0)
             case Person.__directionBack__: return Point(0,1)
             case Person.__directionForward__: return Point(0,-1)
+
+    def Insert(self, char:str, p:Point, obj = None, canInter:bool = False):
+        return self.map.Insert(char, p, obj, canInter)
 
     def PlController(self):
         #for i in range(os.get_terminal_size().columns): print("█")
@@ -34,9 +38,7 @@ class Scene:
         choice = input()
 
         pl = self.map.Find(char=self.map.__charPlayer__.char)
-        print(pl[0])
         if (len(pl)<2) : print("Player not found");return
-        else: print(pl[1])
         match choice.lower():
             case "w":
                 print(self.map.Move(pl[0], Point(pl[0].x,pl[0].y-1)))
@@ -55,21 +57,32 @@ class Scene:
                 point = Point(pl[0].x + self.GetPointOnDirection(pl[1].obj.lastDirection).x,
                               pl[0].y +self.GetPointOnDirection(pl[1].obj.lastDirection).y
               )
-                if (point.x+point.y*self.map.sizeX<0 and point.x+point.y*self.map.sizeX>self.map.sizeX*self.map.sizeY+1): print("Cant use");return
-                #if (self.map.map[point.x+point.y*self.map.sizeX].interacteble): print("U cant interact wich this object...")
-                obj = self.map.map[point.x+point.y*self.map.sizeX].obj
-                print(point)
-                print(pl[1].obj)
-                print("obj", self.map.map[point.x+point.y*self.map.sizeX])
+                if (self.map.PointToInt(point)<0 and self.map.PointToInt(point) > len(self.map.map)): print("Cant use");return
+                obj = self.map.map[self.map.PointToInt(point)].obj
+                print(f"Actions wich [{obj.name}]")
                 if (type(obj)==Person):
                     for i in obj.inter.__interacts__:
-                        print(i,end="; ")
+                        print("",i,end=" ")
+                    print()
+                    self.__action_select__(obj)
+                    print()
+
                     print()
                 else: print("Nothing.....")
                 input()
 
+    @staticmethod
+    def __action_select__(obj:Person)->bool:
+        choice = input()
+        for i in obj.inter.__interacts__:
+            if i.interactName == choice and not i.locked:
+                print(f"$[{obj.name}]: {i.action}...")
+                return True
+        print(f"U cannot do '{choice}'")
+        return False
+
     def PrintMap(self):
-        emptyChar  = [ "┏━━━┓", "┃   ┃", "┗━━━┛" ]
+        emptyChar  = [ ".....", ".....", "....." ]
         playerChar = [ "## ##", "#####", "  #  " ]
         enemyChar  = [ "^^^^^", "_ | _", "|   |"]
         errChar    = [ "#####", "#####", "#####"]
@@ -99,8 +112,10 @@ class Scene:
 
         for i in range(len(messege)):
             if(i%self.map.sizeX==0):print()
-            print(messege[i],end="")
+            print(" ",messege[i],end="")
         print("\n")
+
+    #def GetPlayer():
 
     def DrawFidhtScene(self):
         print("hui")
