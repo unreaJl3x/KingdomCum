@@ -29,16 +29,26 @@ def main():
     logo()
     input("Enter any key to start....")
     #os.system("cls")
-    pl = Player('Player', 0)
-    print(pl)
 
     sceneTest = Scene(5,3)
-    sceneTest.map.Insert(sceneTest.map.__charPlayer__, Point(4,0))
+    enemy = Person("orc",0,10)
+    sceneTest.map.Insert(enemy.char,Point(3,0),enemy,True)
 
     while(True):
         sceneTest.PrintMap()
         sceneTest.PlController()
-
+        sceneTest.map.print()
         time.sleep(0.1)
 
 main()
+
+
+def zagadka(text:str, answer:str, errors:int) -> bool:
+    print(text)
+    for i in range(errors):
+        if (input() == answer):
+            return True
+        print("lol")
+    return False
+
+##print(zagadka("24+3","27",3))

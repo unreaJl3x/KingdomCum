@@ -7,7 +7,7 @@ class Person(Entity):
     __directionRight__ = 2
     __directionLeft__ = 3
 
-    def __init__(self, name : str, race : int, aggresive:int = 0, char:str="P"):
+    def __init__(self, name : str, race : int, aggresive:int = 0, char:str="e"):
         Entity.__init__(self, name, char)
         self.aggresive = 0
         self.race = race
