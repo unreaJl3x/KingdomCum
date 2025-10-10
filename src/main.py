@@ -1,9 +1,8 @@
 import random
 import os
-from player import *
-from Messenger import * # каждый круг будет проверять сообщения. через него будем хуярить глобальные по типу описания пещер наверное?
-from Scene.SceneController import Scene
+from Scene.SceneController import *
 from Scene.map import *
+from Scene.Person.Inventory import *
 import time
 
 def randfomNameConsole():
@@ -12,7 +11,7 @@ def randfomNameConsole():
     "Ты и ДжоДжо уже целовались? Ещё нет, так ведь? Твой первый поцелуй принадлежит не ему! Это был я, Дио!",
               "Я РУССКИЙ!!!",
               "Владимир Путин молодец"]
-    os.system("title ",titles[random.randint(0,len(titles)-1)])
+    os.system("title "+titles[random.randint(0,len(titles)-1)])
 
 def logo():
     print(""" 
@@ -24,25 +23,42 @@ ____  __.__                   .___             _________
         \/       \//_____/      \/            \/        \/            \/ 
 """)
 
+def abFunc(a:bool,pl):
+    if (a):
+        print("Кстати вот документы об отчислении спидозный.")
+        pl.inventory.Add(Ithem("Заявление на Отчисление","Пиздуй работать дворником нищий",0))
+
+
 
 def main():
-    #randfomNameConsole()
+    randfomNameConsole()
+    os.system("cls")
     logo()
     input("Enter any key to start....")
-    #os.system("cls")
+    os.system("cls")
     pl = Player('Player', 0)
 
     sceneTest = Scene(5,3)
     sceneTest.Insert(pl.char, Point(0,0),pl)
-    enemy = Person("Abramov",1,10,char='e')
-    sceneTest.Insert(enemy.char, Point(3,0),enemy,True)
 
-    enemy.inter.AddInteraction(Interact("say","I am rockstar",False))
+    abramov = Person("Abramov",0,10,char='ab')
+    enemy = Person("Enemy",2,10,char='e')
+    dummy = Person("Dummy",2,10,char='d')
+
+    abramov.inter.AddInteraction(Interact("say","А я Абрамов, и я изпользую другой пиздатый спрайт "+colored("гуччи","yellow"),True,func=abFunc))
+    enemy.inter.AddInteraction(Interact("say","Я сосу хуй со стандартный спрайтом противника",False))
+
+    sceneTest.Insert(enemy.char, Point(2, 0), enemy, True)
+    sceneTest.Insert(abramov.char, Point(8, 1), abramov, True)
+    sceneTest.AddSprite(Sprite("ab", [" ┏┓  ", " ┛╹╹┗", "█████"]))
 
     while(True):
         sceneTest.PrintMap()
-        #if sceneTest.GetPlayer().state == 0 :
-        sceneTest.PlController()
-        time.sleep(0.1)
+        if sceneTest.GetPlayer().state == 0 :
+            sceneTest.PlController()
+        elif sceneTest.GetPlayer().state == 1 :
+            sceneTest.PlFight()
 
+        time.sleep(0.1)
+        os.system("cls")
 main()

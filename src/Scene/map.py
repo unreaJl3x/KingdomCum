@@ -1,7 +1,23 @@
-from src.kingdomdef import Point
-from typing import Final
-from src.Person.Person import Person
-from src.player import *
+from .player import *
+
+class Point:
+    def __init__(self, x:int, y:int):
+        self.x = x
+        self.y = y
+    def __add__(self, p):
+        self.x += p.x
+        self.y += p.y
+
+    def __mul__(self, p):
+        self.x *= p.x
+        self.y *= p.y
+
+    def __sub__(self, p):
+        self.x -= p.x
+        self.y -= p.y
+
+    def __str__(self):
+        return f"({self.x}, {self.y})"
 
 class MapPoint():
     def __init__(self,char:str='e', inter:bool=False, obj = None):
@@ -14,8 +30,6 @@ class MapPoint():
 
 class Map:
     __charPlayer__ = MapPoint(char='p')
-    __charWall__ = MapPoint(char="#")
-    __charEnemy__ = MapPoint(char="e")
     __charEmpty__ = MapPoint(char="-")
 
     def __init__(self, sizeX:int, sizeY:int):
