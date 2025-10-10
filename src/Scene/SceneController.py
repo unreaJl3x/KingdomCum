@@ -1,3 +1,5 @@
+import random
+
 from .player import *
 from .map import *
 from termcolor import colored
@@ -12,13 +14,22 @@ class Sprite:
 class Scene:
     def __init__(self,sizeX:int =5,sizeY:int =3,plFov:int=4):
         self.map = Map(sizeX,sizeY)
+
         self.__interacts__ =  list()
         self.__interacts__.append("WALK [w/a/s/d]")
         self.__interacts__.append("INTERACT WITH OBJECT [e]")
         self.__interacts__.append(colored("FIGHT [f]",'red'))
         self.__interacts__.append("Inventory [i]")
+
+        self.__fightInteract__ = list()
+        self.__fightInteract__.append("Try Hit (q)")
+        self.__fightInteract__.append("Defense (d)")
+        self.__fightInteract__.append("Parry (e)")
+        self.__fightInteract__.append("Hold (h)")
+
         self.sprites = dict()
         self.plFov = plFov
+        self.enemyFight = None
 
         self.AddSprite(Sprite('-', [".....", ".....", "....."]))
         self.AddSprite(Sprite('p', ["## ##", "#####", "  #  "]))
@@ -34,8 +45,8 @@ class Scene:
             case Person.__directionBack__: return Point(0,1)
             case Person.__directionForward__: return Point(0,-1)
 
-    def Insert(self, char:str, p:Point, obj = None, canInter:bool = False):
-        return self.map.Insert(char, p, obj, canInter)
+    def Insert(self, char:str, p:Point, obj = None, canInter:bool = False, collision:bool=False):
+        return self.map.Insert(char, p, obj, canInter,collision=collision)
 
     def PlController(self):
         #for i in range(os.get_terminal_size().columns): print("█")
@@ -60,7 +71,18 @@ class Scene:
 
 
         match choice.lower():
-            case "f": pl[1].state = Person.__stateFight__
+            case "f":
+                point = self.map.PointToInt(pl[0]+self.GetPointOnDirection(pl[1].obj.lastDirection))
+                obj = self.map.map[point].obj
+                if type(obj) == Person:
+                    obj.point = point
+                    self.enemyFight = obj
+                    pl[1].obj.state = Person.__stateFight__
+                    os.system("cls")
+
+                else:
+                    print("Nothing....")
+                    input()
 
             case "e":
                 point = Point(pl[0].x + self.GetPointOnDirection(pl[1].obj.lastDirection).x,
@@ -105,7 +127,6 @@ class Scene:
                     print("Nothing.....")
                 input()
 
-
     def PrintMap(self):
         layer = 0
         line = 0
@@ -140,8 +161,54 @@ class Scene:
     def AddSprite(self, sprite:Sprite):
         self.sprites[sprite.name] = sprite
 
-    def RemoceSprite(self, spriteName:str):
+    def RemoveSprite(self, spriteName:str):
         del self.sprites[spriteName]
 
+    def __win(self, pl:Player):
+       # os.system("cls")
+        print(self.enemyFight.point)
+        input()
+        pl.state = Person.__stateStable__
+        self.map.Insert('-', Point(self.enemyFight.point,0))
+        self.enemyFight = None
+
+    """name_fightscene sprite"""
     def PlFight(self):
-        print("hui")
+        pl = self.GetPlayer()
+
+        if f"{self.enemyFight.name}_fightscene" in self.sprites.keys():
+            request = f"{self.enemyFight.name}_fightscene"
+        elif f"{self.enemyFight.name}" in self.sprites.keys():
+            request = f"{self.enemyFight.char}"
+        else: request = "error"
+
+        for i in self.sprites[request].list:
+            print("               "+i)
+        print(f"    [{self.enemyFight.name}] have health {int(self.enemyFight.health)}")
+
+        print( colored(
+               "█████████████████████████████████\n"+
+               "  ▄████  ▄█   ▄▀   ▄  █    ▄▄▄▄▀ \n" +
+               "  █▀   ▀ ██ ▄▀    █   █ ▀▀▀ █ \n" +
+               " █▀▀    ██ █ ▀▄  ██▀▀█     █ \n" +
+               "  █      ▐█ █   █ █   █    █ \n" +
+               "   █      ▐  ███     █    ▀ \n" +
+               "    ▀               ▀          \n" +
+               "█████████████████████████████████" ,"red" ))
+        for i in self.__fightInteract__:
+            print(""+i,end="; ")
+        print()
+
+        choice = input()
+        print(choice)
+        match choice.lower():
+            case "q":
+                chance = (((self.enemyFight.evasion*0.85)/pl.evasion)* (random.randrange(0,8)/8)) * 1.24
+                print(chance)
+                if chance > 0.215:
+                    self.enemyFight.health -= (pl.attributes.strenght/self.enemyFight.attributes.strenght)*random.randint(0,5)/2*1000
+                    if int(self.enemyFight.health) <= 0: self.__win(pl)
+
+            #case "d":
+            #case "e":
+            #case "h":

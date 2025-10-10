@@ -7,6 +7,7 @@ class Point:
     def __add__(self, p):
         self.x += p.x
         self.y += p.y
+        return Point(self.x, self.y)
 
     def __mul__(self, p):
         self.x *= p.x
@@ -20,18 +21,21 @@ class Point:
         return f"({self.x}, {self.y})"
 
 class MapPoint():
-    def __init__(self,char:str='e', inter:bool=False, obj = None):
+    def __init__(self,char:str='e', inter:bool=False, obj = None, collision:bool = False):
         self.char = char
         self.interacteble = inter
         self.obj = obj
+        self.collision = collision
 
     def __str__(self):
         return self.char
 
+
+
 class Map:
     __charPlayer__ = MapPoint(char='p')
     __charEmpty__ = MapPoint(char="-")
-
+    __mapGround = MapPoint(char="-")
     def __init__(self, sizeX:int, sizeY:int):
         self.map = list(range(sizeX*sizeY))
         self.sizeY = sizeY
@@ -50,12 +54,14 @@ class Map:
         return -1
 
     def Move(self, posStart : Point, posEnd : Point) -> bool:
-        self.map[posStart.x + posStart.y * self.sizeX].obj.lastDirection = self.GetDirection(posStart, posEnd)
-        if (posEnd.x+posEnd.y*self.sizeX <0 or posEnd.x+posEnd.y*self.sizeX>self.sizeY*self.sizeX): return False
-        if (self.map[posEnd.x+posEnd.y*self.sizeX]==self.__charEmpty__):
+        self.map[self.PointToInt(posStart)].obj.lastDirection = self.GetDirection(posStart, posEnd)
+        if (self.PointToInt(posEnd) <0 or self.PointToInt(posEnd) > self.sizeY*self.sizeX): return False
+        print(self.map[self.PointToInt(posEnd)].collision)
+        if (not self.map[self.PointToInt(posEnd)].collision):
             a = self.map[posEnd.x+posEnd.y*self.sizeX]
             self.map[posEnd.x+posEnd.y*self.sizeX] = self.map[posStart.x+posStart.y*self.sizeX ]
-            self.map[posStart.x+posStart.y*self.sizeX] = a
+            self.map[posStart.x+posStart.y*self.sizeX] = self.__mapGround
+            self.__mapGround = a
 
 
             print("You move.....")
@@ -81,11 +87,9 @@ class Map:
     def Clear(self, count:int=-1):
         for i in range(len(self.map)): self.map[i] = self.__charEmpty__
 
-    def Insert(self, char:str, p:Point, obj = None, canInter:bool = False)->bool:
-        if (    (self.map[p.x+p.y*self.sizeX] != self.__charEmpty__) or
-                        p.x + p.y*self.sizeY >= len(self.map)
-        ): return False
-        self.map[ p.x + p.y*self.sizeY ] =  MapPoint(char=char, inter=canInter, obj=obj)
+    def Insert(self, char:str, p:Point, obj = None, canInter:bool = False, collision:bool = True)->bool:
+        if ((p.x + p.y*self.sizeY < 0) or p.x + p.y*self.sizeY >= len(self.map)): return False
+        self.map[ p.x + p.y*self.sizeY ] =  MapPoint(char=char, inter=canInter, obj=obj,collision=collision)
         return True
 
     def GetObj(self,p:Point):

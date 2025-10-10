@@ -32,9 +32,11 @@ class Person(Entity):
         Entity.__init__(self, name, char)
         self.aggresive = 0
         self.race = race
+        self.point = None
+        self.fightState = 0
         self.attributes = GetAttributeFromRaceId(self.race)
         self.evasion = self.attributes.agility/2
-        self.health = self.attributes.strenght/2
+        self.health = self.attributes.strenght*0.8
         self.mana = self.attributes.inttiligence/2
         self.state = 0
         self.skills = []
