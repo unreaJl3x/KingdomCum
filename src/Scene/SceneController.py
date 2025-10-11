@@ -90,22 +90,23 @@ class Scene:
                 point = Point(pl[0].x + self.GetPointOnDirection(pl[1].obj.lastDirection).x,
                               pl[0].y +self.GetPointOnDirection(pl[1].obj.lastDirection).y
               )
-                if (self.map.PointToInt(point)<0 and self.map.PointToInt(point) > len(self.map.map)): print("Cant use");return
+                print(type(self.map.map[self.map.PointToInt(point)].obj))
+                if (self.map.PointToInt(point)<0 or self.map.PointToInt(point) > len(self.map.map) or (type(self.map.map[self.map.PointToInt(point)].obj) != type(Entity("","")) and type(self.map.map[self.map.PointToInt(point)]).obj) != type(Person)): print("Cant use");input();return
                 obj = self.map.map[self.map.PointToInt(point)].obj
                 print(f"\nActions wich "+colored(f"[{obj.name}];","yellow"))
 
-                if (type(obj)==Person):
-                    if (len(obj.inter.__interacts__)==1):
-                        obj.inter.Use(obj.inter.__interacts__[0].name, pasteBefore=colored(f"[{obj.name}] ","yellow"),pasteAfter="....\n",pl=pl[1].obj)
-                    else:
-                        for i in obj.inter.__interacts__:
-                            print("",i,end=" ")
-                        print()
-                        choice = input()
-                        if not obj.inter.Use(choice, pasteBefore=colored(f"[{obj.name}]: ","yellow"),pasteAfter="....\n",pl=pl[1].obj): print(f"U cannot do '{choice}'")
 
+                if (len(obj.inter.__interacts__)==1):
+                    obj.inter.Use(obj.inter.__interacts__[0].name, pasteBefore=colored(f"[{obj.name}] ","yellow"),pasteAfter="....\n")
+                else:
+                    for i in obj.inter.__interacts__:
+                        print("",i,end=" ")
                     print()
-                else: print("Nothing.....")
+                    choice = input()
+                    if not obj.inter.Use(choice, pasteBefore=colored(f"[{obj.name}]: ","yellow"),pasteAfter="....\n"): print(f"U cannot do '{choice}'")
+
+                print()
+
                 input()
 
             case "i":
