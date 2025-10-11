@@ -1,11 +1,6 @@
-import random
-import os
-from Scene.SceneController import *
-from Scene.map import *
-from Scene.Person.Inventory import *
-from Scene.bot import *
 from chapterTwo import *
-import time
+from chapterOne import *
+
 
 def randfomNameConsole():
     titles = ["Я атменил тп","На нахимове нет людей","Потные мужчины тягают железо,"
@@ -33,6 +28,8 @@ def main():
     input("Enter any key to start....")
     os.system("cls")
     pl = Player("hui",0)
+
+    chapterOne(pl)
     chapterTwo_second(pl)
 
 main()

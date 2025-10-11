@@ -76,7 +76,7 @@ class Scene:
             case "f":
                 point = self.map.PointToInt(pl[0]+self.GetPointOnDirection(pl[1].obj.lastDirection))
                 obj = self.map.map[point].obj
-                if type(obj) == Person:
+                if type(obj) == Person and obj.aggresive>=10:
                     obj.point = point
                     self.enemyFight = obj
                     pl[1].obj.state = Person.__stateFight__
@@ -173,13 +173,19 @@ class Scene:
         print(self.enemyFight.point)
         input()
         pl.state = Person.__stateStable__
-        self.map.Insert('-', Point(self.enemyFight.point,0))
+        self.map.Insert('-', Point(self.map.PointToInt(self.enemyFight.point),0))
+
+        for i in self.enemyFight.inventory.slots:
+            pl.inventory.slots.append(i)
         self.enemyFight = None
+
+
 
     def FightAction(self,act:str, target:Person, user:Person):
         if user.fightState == user.__fightStateStunned__:
             user.fightState = user.__fightStateNull__
             return
+
         match act.lower():
             case "q":
                 print(f"{user.name} attack {target.name}.",end=" ")

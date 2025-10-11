@@ -38,7 +38,7 @@ class Person(Entity):
 
     def __init__(self, name : str, race : int, aggresive:int = 0, char:str="P"):
         Entity.__init__(self, name, char)
-        self.aggresive = 0
+        self.aggresive = aggresive
         self.race = race
         self.point = None
         self.fightState = 0
@@ -51,6 +51,12 @@ class Person(Entity):
         self.lastDirection = self.__directionForward__
         self.inventory = Inventory(5)
         self.reputation = 0
+        self.levle = 1
+
+    def LevleUp(self,lvl:int=1):
+        self.levle += lvl
+        for i in range(lvl):
+            self.attributes += GetAttributeAddact(self.race)
 
     def __str__(self):
         return f"[Person][{self.__getStrStateOnInt__(self.state)}][watch: {self.DirectionToText()}] {self.name}({self.__getRaceFromInt__(self.race)}) "

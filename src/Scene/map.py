@@ -30,8 +30,6 @@ class MapPoint():
     def __str__(self):
         return self.char
 
-
-
 class Map:
     __charPlayer__ = MapPoint(char='p')
     __charEmpty__ = MapPoint(char="-")

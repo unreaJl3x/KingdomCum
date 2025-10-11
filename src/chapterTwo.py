@@ -31,7 +31,7 @@ def chapterTwo_second(pl:Player):
 
     #LOBBY_________________________________________
     lobbyMap.Insert(pl.char, Point(0,0),pl)
-    butler = Person("player",0,0,'b')
+    butler = Person("Дворецкий хуй",0,0,'b')
     butler.inter.AddInteraction(Interact("say", "“Ваше высочество, вас сегодня ждет встреча с "+colored("3 послами из разных стран","cyan")+", они прибыли из Амидонии, Контареллы и Сархана. Они уже ожидают вас в тронном зале."))
     door = Person("door", 0, 0,'d')
     door.inter.AddInteraction(Interact(f"teleport", "This door lead to "+colored("ThroneHall","yellow")+". Do you want пойти нахуй(y/n): ", False, setMap, scene, throneHallMap, pl,Point(1,0)))

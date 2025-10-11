@@ -8,6 +8,7 @@ class Attributes:
         self.strenght += attr.strenght
         self.agility += attr.agility
         self.inttiligence += attr.inttiligence
+        return Attributes(self.strenght, self.agility, self.inttiligence)
 
 def GetAttributeFromRaceId(num:int)-> Attributes:
     match num:
