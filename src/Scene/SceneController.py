@@ -1,4 +1,5 @@
 import random
+from unittest import case
 
 from .player import *
 from .map import *
@@ -26,6 +27,7 @@ class Scene:
         self.__fightInteract__.append("Defense (d)")
         self.__fightInteract__.append("Parry (e)")
         self.__fightInteract__.append("Hold (h)")
+        self.__fightInteract__.append("Escape (p)")
 
         self.sprites = dict()
         self.plFov = plFov
@@ -172,19 +174,58 @@ class Scene:
         self.map.Insert('-', Point(self.enemyFight.point,0))
         self.enemyFight = None
 
+    def FightAction(self,act:str, target:Person, user:Person):
+        if user.fightState == user.__fightStateStunned__:
+            user.fightState = user.__fightStateNull__
+            return
+        match act.lower():
+            case "q":
+                print(f"{user.name} attack {target.name}.",end=" ")
+                chance = (((target.evasion * 0.85) / user.evasion) * (random.randrange(0, 8) / 8)) * 1.24
+
+                if chance > 0.215:
+                    if target.fightState == target.__fightStateParry__:
+                        target.fightState = target.__fightStateNull__
+                        user.fightState = target.__fightStateStunned__
+                        print(f"{user.name} is STUNNED.")
+                        input()
+
+                    hitDmg = (user.attributes.strenght / target.attributes.strenght) * random.randint(0, 5) / 2
+                    if target.fightState == Person.__fightStateDefense__: hitDmg = hitDmg*((user.attributes.strenght / target.attributes.strenght)*random.randint(1,5)/5)
+                    target.health -= hitDmg
+                    print(f"and hit on {hitDmg}",end="")
+                    print()
+                    if int(target.health) <= 0:
+                        print(f"{target.name} DIE.")
+                        input()
+                        self.__win(user)
+                else: print(f"and miss :) {target.name} under protection Hakari")
+            case "d":
+                print(f"{user.name} becomes protective",end=" ")
+                user.fightState = user.__fightStateDefense__
+            case "e":
+                print(f"{user.name} raddy to parry.")
+                user.fightState = user.__fightStateParry__
+                return
+            case "h": print(f"{user.name} waiting youre action")
+
+        if user.fightState == Person.__fightStateParry__:
+            user.fightState = user.__fightStateStunned__
+
     """name_fightscene sprite"""
-    def PlFight(self):
+    def PlFight(self)->str:
         pl = self.GetPlayer()
 
         if f"{self.enemyFight.name}_fightscene" in self.sprites.keys():
             request = f"{self.enemyFight.name}_fightscene"
-        elif f"{self.enemyFight.name}" in self.sprites.keys():
-            request = f"{self.enemyFight.char}"
+        elif f"{self.enemyFight.char}" in self.sprites.keys():
+            request = self.enemyFight.char
         else: request = "error"
 
         for i in self.sprites[request].list:
             print("               "+i)
         print(f"    [{self.enemyFight.name}] have health {int(self.enemyFight.health)}")
+        print(f"    [ You ] have health {int(pl.health)}")
 
         print( colored(
                "█████████████████████████████████\n"+
@@ -199,16 +240,4 @@ class Scene:
             print(""+i,end="; ")
         print()
 
-        choice = input()
-        print(choice)
-        match choice.lower():
-            case "q":
-                chance = (((self.enemyFight.evasion*0.85)/pl.evasion)* (random.randrange(0,8)/8)) * 1.24
-                print(chance)
-                if chance > 0.215:
-                    self.enemyFight.health -= (pl.attributes.strenght/self.enemyFight.attributes.strenght)*random.randint(0,5)/2*1000
-                    if int(self.enemyFight.health) <= 0: self.__win(pl)
-
-            #case "d":
-            #case "e":
-            #case "h":
+        return input()

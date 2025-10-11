@@ -13,6 +13,11 @@ class Person(Entity):
     __stateFight__ = 1
     __stateStory__ = 2
 
+    __fightStateNull__ = 0
+    __fightStateDefense__ = 1
+    __fightStateParry__ = 2
+    __fightStateStunned__ = 3
+
     @staticmethod
     def __getStrStateOnInt__(state:int)->str:
         match state:
@@ -28,6 +33,9 @@ class Person(Entity):
             case 2: return "Orc"
         return ""
 
+    def __maxHealth__(self)->int:
+        return self.attributes.strenght*0.8
+
     def __init__(self, name : str, race : int, aggresive:int = 0, char:str="P"):
         Entity.__init__(self, name, char)
         self.aggresive = 0
@@ -36,7 +44,7 @@ class Person(Entity):
         self.fightState = 0
         self.attributes = GetAttributeFromRaceId(self.race)
         self.evasion = self.attributes.agility/2
-        self.health = self.attributes.strenght*0.8
+        self.health = self.__maxHealth__()
         self.mana = self.attributes.inttiligence/2
         self.state = 0
         self.skills = []

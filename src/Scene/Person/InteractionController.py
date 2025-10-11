@@ -28,7 +28,7 @@ class InteractionController:
         for i in self.__interacts__:
             if i.name == name:
                 print(pasteBefore+i.action+pasteAfter,end="")
-                if i.func is not None: i.func(True,pl)
+                if i.func is not None: i.func(pl)
                 if (i.delAferUse): self.__interacts__.remove(i)
                 return True
         return False
