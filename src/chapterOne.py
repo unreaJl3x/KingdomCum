@@ -9,6 +9,7 @@ from Scene.bot import *
 import time
 import math
 
+
 def setMap(param):
     if input() != "y":
         print("Долбаеб")
