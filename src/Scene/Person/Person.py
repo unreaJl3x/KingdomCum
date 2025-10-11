@@ -50,6 +50,7 @@ class Person(Entity):
         self.skills = []
         self.lastDirection = self.__directionForward__
         self.inventory = Inventory(5)
+        self.reputation = 0
 
     def __str__(self):
         return f"[Person][{self.__getStrStateOnInt__(self.state)}][watch: {self.DirectionToText()}] {self.name}({self.__getRaceFromInt__(self.race)}) "

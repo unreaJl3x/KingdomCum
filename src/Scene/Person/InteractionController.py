@@ -1,5 +1,5 @@
 class Interact:
-    def __init__(self, interactName:str, action:str, delAferUse:bool = False, func=None, params:list()=None):
+    def __init__(self, interactName:str, action:str, delAferUse:bool = False, func=None, *params):
         self.name = interactName
         self.action = action
         self.work = False

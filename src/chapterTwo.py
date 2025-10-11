@@ -2,49 +2,77 @@ import random
 import os
 from Scene.SceneController import *
 from Scene.map import *
-from Scene.Person.Inventory import *
 from Scene.bot import *
 import time
 
-def Door(currentScene:Scene, newScene:Scene):
-    pl = currentScene.GetPlayer()
-    currentScene = newScene
-    currentScene.Insert(pl.char,Point(0,0),obj=pl)
+def setMap(param):
+    if input() != "y":
+        print("Долбаеб")
+        return
+    print("Съебался")
+    l = []
+    for i in param:
+        l.append(i)
+    l[0].map = l[1]
+    pGet = l[0].map.Find(char=l[2].char)
+    if (len(pGet)<2):
+        l[0].Insert(l[2].char, l[3], obj=l[2])
 
 def chapterTwo_second(pl:Player):
-    mainScene = Scene()
+    scene = Scene(5,3)
 
-    sceneLobby = Scene(5, 3)
-    sceneLobby.Insert(char="p", p=Point(0, 0), obj=pl)
-    butler = Person(name="Дворецкий",race=0,aggresive=2)
-    butler.inter.AddInteraction(Interact("say"," “Ваше высочество, вас сегодня ждет встреча с "+colored("3 послами из разных стран","cyan")+", они прибыли из Амидонии, Контареллы и Сархана и уже ожидают вас в тронном зале.\n"))
+    #SPRTES________________________________
+    scene.AddSprite(Sprite("poslanets",["|||||","|0-0|","|||||"]))
+    scene.AddSprite(Sprite("d",["|---|","| + |","|___|"]))
+    scene.AddSprite(Sprite("b",["-----","  0_0"," _||_"]))
 
-    doorLobby = Entity(name="Door to troneHall.",char='dtr')
-    doorLobby.inter.AddInteraction(Interact("open","Do you want teleport to TrhoneHall?(y/a)", func=Door, params=list[mainScene,sceneLobby]))
-    sceneLobby.Insert(doorLobby.char,Point(4,0),obj=doorLobby,canInter=True,collision=True)
-    print(
-"От войны не осталось и следа, здания были отреставрированы, улицы убраны, а люди спешили на работу.\n"+
-"Находясь в своем новом дворце, принц был очень доволен результатом.\n"
-"Стоявший рядом дворецкий, увидел довольное лицо и в его груди что-то защемило, но он резко откинул все внутри себя и холодным голосом сказал принцу: \n\n")
+    lobbyMap = Map(5,3)
+    throneHallMap = Map(7, 4)
+
+    #LOBBY_________________________________________
+    lobbyMap.Insert(pl.char, Point(0,0),pl)
+    butler = Person("player",0,0,'b')
+    butler.inter.AddInteraction(Interact("say", "“Ваше высочество, вас сегодня ждет встреча с "+colored("3 послами из разных стран","cyan")+", они прибыли из Амидонии, Контареллы и Сархана. Они уже ожидают вас в тронном зале."))
+    door = Person("door", 0, 0,'d')
+    door.inter.AddInteraction(Interact(f"teleport", "This door lead to "+colored("ThroneHall","yellow")+". Do you want пойти нахуй(y/n): ", False, setMap, scene, throneHallMap, pl,Point(1,0)))
+    lobbyMap.Insert(butler.char, Point(7,0),butler,True,True)
+    lobbyMap.Insert(door.char, Point(4,0),door,True,True)
+
+    #THRONE________________________________________
+    doorToLobby = Person("door", 0, 0,'d')
+    doorToLobby.inter.AddInteraction(Interact(f"teleport", "This door lead to "+colored("Lobby","yellow")+". Do you want пойти нахуй(y/n): ", False, setMap, scene, lobbyMap, pl))
+    throneHallMap.Insert(doorToLobby.char, Point(0,0),doorToLobby,True,True)
+
+    poslanets = [Person("Иларион",0,0,char="poslanets"),
+                 Person("Стосеул",0,0,char="poslanets"),
+                 Person("Артанис V",0,0,char="poslanets")
+    ]
+    poslanets[0].inter.AddInteraction(Interact("say","“Приветствую вас ваше высочество, меня зовут Иларион, я представитель страны Сархана. Я бы хотел обсудить с вами два вопроса”"))
+
+    for i in range(len(poslanets)):
+        throneHallMap.Insert(poslanets[i].char, Point(5,i+1),poslanets[i],True,True)
+
+    print("От войны не осталось и следа, здания были отреставрированы, улицы убраны, а люди спешили на работу.\n"+"Находясь в своем новом дворце, принц был очень доволен результатом.\n""Стоявший рядом дворецкий, увидел довольное лицо и в его груди что-то защемило, но он резко откинул все внутри себя и холодным голосом сказал принцу: \n\n")
     input(".....")
 
-    mainScene = sceneLobby
+    scene.map = lobbyMap
+    os.system("cls")
     while (True):
         if pl.health <= 0:
             print("Game Over")
             return
 
-        if mainScene.GetPlayer().state == 0:
-            mainScene.PrintMap()
-            mainScene.PlController()
+        if scene.GetPlayer().state == 0:
+            scene.PrintMap()
+            scene.PlController()
 
-        elif mainScene.GetPlayer().state == 1:
-            action_pl = mainScene.PlFight()
-            action_bot = FightBot(pl, mainScene.enemyFight)
+        elif scene.GetPlayer().state == 1:
+            action_pl = scene.PlFight()
+            action_bot = FightBot(pl, scene.enemyFight)
             print(action_bot)
-            mainScene.FightAction(action_bot, pl, mainScene.enemyFight)
+            scene.FightAction(action_bot, pl, scene.enemyFight)
             input()
-            mainScene.FightAction(action_pl, mainScene.enemyFight, pl)
+            scene.FightAction(action_pl, scene.enemyFight, pl)
             input()
 
         time.sleep(0.1)

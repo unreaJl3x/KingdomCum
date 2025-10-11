@@ -91,7 +91,7 @@ class Scene:
                               pl[0].y +self.GetPointOnDirection(pl[1].obj.lastDirection).y
               )
                 print(type(self.map.map[self.map.PointToInt(point)].obj))
-                if (self.map.PointToInt(point)<0 or self.map.PointToInt(point) > len(self.map.map) or (type(self.map.map[self.map.PointToInt(point)].obj) != type(Entity("","")) and type(self.map.map[self.map.PointToInt(point)]).obj) != type(Person)): print("Cant use");input();return
+                if self.map.PointToInt(point)<0 or self.map.PointToInt(point) > len(self.map.map): print("Cant use");input();return
                 obj = self.map.map[self.map.PointToInt(point)].obj
                 print(f"\nActions wich "+colored(f"[{obj.name}];","yellow"))
 
@@ -158,6 +158,7 @@ class Scene:
 
     def GetPlayer(self) -> Player | None:
         pl = self.map.Find(char=self.map.__charPlayer__.char)
+        #print(pl[0])
         if (len(pl)<2) : print("Player not found");return None
         return pl[1].obj
 
