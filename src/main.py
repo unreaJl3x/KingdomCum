@@ -1,7 +1,7 @@
 from chapterTwo import *
 from chapterOne import *
-#from chapterThree import *
-
+from chapterThree import *
+from chapterFour import *
 
 def randfomNameConsole():
     titles = ["Я атменил тп","На нахимове нет людей","Потные мужчины тягают железо,"
@@ -26,26 +26,36 @@ def main():
     randfomNameConsole()
     os.system("cls")
     logo()
-    print("Enter any key to start....\r",end="")
-    input("\r")
+    print("Enter any key to start....",end="")
+    input("")
     #os.system("cls")
     pl = Player("hui",0)
     pl.LevleUp(4)
-
+    print("|     StoryMode     |")
+    print("_____________________")
     print("\r Chapter One\n Chapter Two\n Chapter Three")
     choice = input("Choice chapter")
 
     match choice:
         case "1":
             chapterOne(pl)
+            print("Спустя несколько месяцев.....")
+            os.system("cls")
             chapterTwo_second(pl)
-            # chapterThree(pl)
+            os.system("cls")
+            print("Из окна на них глядел дворецкий, явно недовольный, что принц заводит новые знакомства и наращивает мощь. Холодным взглядом, перед тем как уйти, он обводит “Хрустальную розу” и королеву Контареллы, и растворяясь в темноте")
+            chapterThree(pl)
+            chapterFour(pl)
 
         case "2":
             chapterTwo_second(pl)
-            # chapterThree(pl)
-
-        #case 3:
-            #chapterThree(pl)
-
+            os.system("cls")
+            print("Из окна на них глядел дворецкий, явно недовольный, что принц заводит новые знакомства и наращивает мощь. Холодным взглядом, перед тем как уйти, он обводит “Хрустальную розу” и королеву Контареллы, и растворяясь в темноте")
+            chapterThree(pl)
+            chapterFour(pl)
+        case "3":
+            chapterThree(pl)
+            chapterFour(pl)
+        case "4":
+            chapterFour(pl)
 main()

@@ -50,7 +50,7 @@ class Person(Entity):
     def __maxHealth__(self)->int:
         return self.attributes.strenght*0.8
 
-    def __init__(self, name : str, race : int, aggresive:int = 0, char:str="P", deathMessage:str=""):
+    def __init__(self, name:str, race:int = 0, aggresive:int = 0, char:str = "e", deathMessage:str = None,  startFightMessage:str = None):
         Entity.__init__(self, name, char)
         self.aggresive = aggresive
         self.race = race
@@ -67,6 +67,7 @@ class Person(Entity):
         self.reputation = 0
         self.deathMessage = deathMessage
         self.levle = 1
+        self.startFightMessage = startFightMessage
 
     def LevleUp(self,lvl:int=1):
         self.levle += lvl

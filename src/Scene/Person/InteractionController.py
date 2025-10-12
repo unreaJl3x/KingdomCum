@@ -1,5 +1,5 @@
 class Interact:
-    def __init__(self, interactName:str, action:str, delAferUse:bool = False, func=None, *params):
+    def __init__(self, interactName:str, action:str=None, delAferUse:bool = False, func=None, *params):
         self.name = interactName
         self.action = action
         self.work = False
@@ -28,7 +28,7 @@ class InteractionController:
     def Use(self, name:str, pasteBefore:str="",pasteAfter:str="")->bool:
         for i in self.__interacts__:
             if i.name == name:
-                print(pasteBefore+i.action+pasteAfter,end="")
+                if i.action != None: print(pasteBefore+i.action+pasteAfter,end="")
                 if i.func is not None: i.func(i.params)
                 if (i.delAferUse): self.__interacts__.remove(i)
                 return True

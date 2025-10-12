@@ -168,21 +168,24 @@ class Scene:
     def RemoveSprite(self, spriteName:str):
         del self.sprites[spriteName]
 
-    def __win(self, pl:Player):
+    def __win(self, target:Person, user):
        # os.system("cls")
+        if type(target) == Player: print("U DIEEEEEEEEEEEEEEEEEEEEEEEE!");return
+        if target.deathMessage != None: print(target.deathMessage)
         input()
-        pl.state = Person.__stateStable__
+        user.state = Person.__stateStable__
         self.map.Insert('-', Point(self.map.PointToInt(self.enemyFight.point),0))
         os.system("cls")
         print("Check youre inventory, mayby grt any ithems. ^_^")
-        for i in self.enemyFight.inventory.slots:
-            pl.inventory.slots.append(i)
+        for i in target.inventory.slots:
+            user.inventory.slots.append(i)
         self.enemyFight = None
         return
 
 
 
     def FightAction(self,act:str, target:Person, user:Person):
+        if target.startFightMessage != None: print(target.startFightMessage);target.startFightMessage = None
         if user.fightState == user.__fightStateStunned__:
             user.fightState = user.__fightStateNull__
             return
@@ -207,7 +210,7 @@ class Scene:
                     print()
                     if int(target.health) <= 0:
                         print(f"{target.name} DIE.")
-                        self.__win(user)
+                        self.__win(target, user)
                 else: print(f"and miss :) {target.name} under protection Hakari")
             case "d":
                 print(f"{user.name} becomes protective",end=" ")

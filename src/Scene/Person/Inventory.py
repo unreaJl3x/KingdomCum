@@ -1,5 +1,5 @@
 class Ithem:
-    def __init__(self, name : str, description : str, type : int,count:int = 1, invisible:bool=False):
+    def __init__(self, name : str, description : str=None, type : int=0,count:int = 1, invisible:bool=False):
         self.name = name
         self.description = description
         self.type = type
