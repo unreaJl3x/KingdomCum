@@ -30,7 +30,6 @@ class Scene:
         self.__fightInteract__.append("Escape (p)")
 
         self.sprites = dict()
-        self.plFov = plFov
         self.enemyFight = None
 
         self.AddSprite(Sprite('-', [".....", ".....", "....."]))
@@ -181,8 +180,6 @@ class Scene:
             user.inventory.slots.append(i)
         self.enemyFight = None
         return
-
-
 
     def FightAction(self,act:str, target:Person, user:Person):
         if target.startFightMessage != None: print(target.startFightMessage);target.startFightMessage = None
