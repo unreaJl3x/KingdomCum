@@ -1,3 +1,5 @@
+from unittest import case
+
 from .Entity import *
 from .Attributes import *
 from .Inventory import Inventory
@@ -19,6 +21,18 @@ class Person(Entity):
     __fightStateStunned__ = 3
 
     @staticmethod
+    def __getStrOnFightState__(state:int)->str:
+        match state:
+            case 0:
+                return "Stable"
+            case 1:
+                return "Defense"
+            case 2:
+                return "Parry"
+            case 3:
+                return "Stunned"
+
+    @staticmethod
     def __getStrStateOnInt__(state:int)->str:
         match state:
             case 0: return "stable"
@@ -36,7 +50,7 @@ class Person(Entity):
     def __maxHealth__(self)->int:
         return self.attributes.strenght*0.8
 
-    def __init__(self, name : str, race : int, aggresive:int = 0, char:str="P"):
+    def __init__(self, name : str, race : int, aggresive:int = 0, char:str="P", deathMessage:str=""):
         Entity.__init__(self, name, char)
         self.aggresive = aggresive
         self.race = race
@@ -51,6 +65,7 @@ class Person(Entity):
         self.lastDirection = self.__directionForward__
         self.inventory = Inventory(5)
         self.reputation = 0
+        self.deathMessage = deathMessage
         self.levle = 1
 
     def LevleUp(self,lvl:int=1):

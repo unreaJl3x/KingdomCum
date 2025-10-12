@@ -1,5 +1,6 @@
 from chapterTwo import *
 from chapterOne import *
+#from chapterThree import *
 
 
 def randfomNameConsole():
@@ -25,11 +26,26 @@ def main():
     randfomNameConsole()
     os.system("cls")
     logo()
-    input("Enter any key to start....")
-    os.system("cls")
+    print("Enter any key to start....\r",end="")
+    input("\r")
+    #os.system("cls")
     pl = Player("hui",0)
+    pl.LevleUp(4)
 
-    chapterOne(pl)
-    chapterTwo_second(pl)
+    print("\r Chapter One\n Chapter Two\n Chapter Three")
+    choice = input("Choice chapter")
+
+    match choice:
+        case "1":
+            chapterOne(pl)
+            chapterTwo_second(pl)
+            # chapterThree(pl)
+
+        case "2":
+            chapterTwo_second(pl)
+            # chapterThree(pl)
+
+        #case 3:
+            #chapterThree(pl)
 
 main()

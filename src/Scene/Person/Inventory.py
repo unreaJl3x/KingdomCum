@@ -1,9 +1,10 @@
 class Ithem:
-    def __init__(self, name : str, description : str, type : int,count:int = 1):
+    def __init__(self, name : str, description : str, type : int,count:int = 1, invisible:bool=False):
         self.name = name
         self.description = description
         self.type = type
         self.count =count
+        self.invisibledToPrint = invisible
     def __str__(self):
         return f"({self.name}, {self.type}) {self.description}."
 
@@ -16,6 +17,9 @@ class Inventory:
     def __init__(self, slotCount:int):
         self.slots = []
         self.max = slotCount
+    def __getitem__(self, ithem:int):
+        if  self.slots[ithem].invisibledToPrint: return None
+        return self.slots[ithem]
 
     def Add(self, ithem:Ithem)->bool:
         for i in self.slots:
@@ -36,7 +40,13 @@ class Inventory:
         for i in range(len(self.slots)):
             if i%sizeLine == 0:
                 print()
-            print(self.slots[i].name+f" {self.slots[i].count}",end="")
+            if not self.slots[i].invisibledToPrint:
+                print(f"(pos{i})(count{self.slots[i].count})"+self.slots[i].name,end="")
         print()
 
+    def HaveIs(self,name:str)->bool:
+        for i in self.slots:
+            if i.name == name:
+                return True
+        return False
 

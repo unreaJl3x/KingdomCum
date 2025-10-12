@@ -7,13 +7,14 @@ from Scene.map import *
 from Scene.Person.Inventory import *
 from Scene.bot import *
 import time
-import math
+
 
 
 def setMap(param):
-    if input() != "y":
+    if input() == "n":
         print("Долбаеб")
         return
+
     print("Съебался")
     l = []
     for i in param:
@@ -23,19 +24,68 @@ def setMap(param):
     if (len(pGet)<2):
         l[0].Insert(l[2].char, l[3], obj=l[2])
 
-def Outside(param):
-    setMap(param)
-    print("daun")
-
 def GraveYard(param):
     setMap(param)
     l=[]
     for i in param:
         l.append(i)
-    l[0].enemyFight = l[4]
-    l[2].state = Person.__stateFight__
+    if l[4].health>0:
+        l[0].enemyFight = l[4]
+        l[2].state = Person.__stateFight__
+
+class Document:
+    def __init__(self,header:str, text:str,rep:int):
+        self.header = header
+        self.text = text
+        self.active = True
+        self.repForAccept=rep
+documents = [Document("Фурри охотится на уличных животных!", "  Представители 'Пушистой церкви' ,в народе называющих себя фурри, для создания своих костюмов отлавливают с улиц бездомных животных и сдерают с них шкуры. Неоднократно были инциденты зоофилии. Чиновники предлагают запретить эту субкультуру.",10),
+             Document("МГЕ братья творят беспорядки", "   Ебут твою мамашу. Чиновники предлагают запретить.",-5),
+             Document("Гос поддержка малоимущих","   Предложение ввести доп выплаты уязвимым группам граждан. Чиновники негодуют.",5),
+             Document("Аграрные реформы.", "   Удобрение уничтоженных во время войны земель и засеивание их культурными растениями(они не грубят старшим). И выкарчевывание сырников(Они матюкаются, но со сметаной ничего так ).",7),
+             Document("Вспышка вируса","   В небольшом округе вспыхнула локальная эпидемия вируса, ученые не знают как ее лечить. Чиновники предлагабт сжечь всех зараженных.",5),
+             Document("Вегетерианци","   Группа людей, зовущих себя вегатарианцами пропагандируют в массы идеи об отказеот мяса. Их лидером и наиболее ярым представителем является Натик Пяточкова, заявляющая что все идеи ей диктует говорящий огурец с которым та регулярно общается. Народ требует ее сожжения как ведьмы.",11),
+             Document("Эко активисты","   Новопровозглашенная секта 'Святой коровьей лепешки', последователи которой считают Этерний и все новоизобретенные с ее помощью технологии происками дьявола разрушаищими хрупкую человеческую душу, что идет в разрез с нашей нынешней политикой. Чиновники предлагают поджечь их резиденцию.",6)
+ ]
+
+def miniGame(param):
+    l=[]
+    for i in param:
+        l.append(i)
+    rep = 0
+    print("""Сражение с драконом хоть и было смертельно опасным, все же вывело принца из беспросветной рутинной тоски. И вот он весь в крови своего противника, вновь возвращается в мир серой обыденности, к стопки документов, чьи верхушки стремятся к потолку дворца, такой родной, но в тоже время принц с радостью предал бы ее огню. 
+    Вы садитесь, беря в одну руку, заправленную Этернийскими чернилами, из-за природы материала она имела легкий сине-зеленый блестящий оттенок. В другую руку вы берете документ, весь утыканный подписями различных служб, фильтрующие поток тупых предложений. Вздохнув мысленно поблагодарив их за проделанную работу, принц наконецто садится за работу...""")
+    input()
+    os.system('cls')
+    while(len(documents)>0):
+        doc = documents[random.randint(0,len(documents))-1]
+        print(f"                    [{doc.header}]  \n   {doc.text}\n Отклонить(n)        Подписать(y)",end="")
+        mod = 1
+        if input() == 'y':
+            rep+=doc.repForAccept
+            mod=1
+        else:
+            rep -= doc.repForAccept;
+            mod = -1
+        print(f"You give {doc.repForAccept*mod} point reputations.")
+        documents.remove(doc)
+        input()
+        os.system('cls')
+    print("\n\n Отложив последний листок, вы откинулись на кресле глубоко вздохнув.")
+    print(f"Finally rep:{rep}.")
+    if rep>0:
+        l[0].inventory.Add(Ithem("quest2","2",1,invisible=True))
+
+def exitLvl(params):
+    l=[]
+    for i in params:
+        l.append(i)
+    if l[0].inventory.HaveIs("quest2") and l[0].inventory.HaveIs("Rapire blue rose"):
+        ENDCHAPTER = True
+    else: print("У вас остались незаконченные дела...")
 
 def chapterOne(pl:Player):
+    ENDCHAPTER = False
     scene= Scene(5,3)
     mapLobby = Map(5,3)
     scene.map = mapLobby
@@ -99,23 +149,29 @@ def chapterOne(pl:Player):
 
     dragon = Person("dragon",0,sys.maxsize,'dr')
     dragon.LevleUp(10)
-    dragon.health = 0#dragon.attributes.strenght/2
+    dragon.attributes.strenght=1
+    dragon.health = 1#dragon.attributes.strenght/2
     dragon.point = Point(9,0)
-    dragon.inventory.Add(Ithem("Rapire blue rose","хуй",0,1))
+    dragon.inventory.Add(Ithem("Rapire blue rose","Реликвия вашей семьи. Прикосновение к клинку вызывает у вас легкое жжение руки. Вы видите как на запястье появляется рисунок голубой розы.",0,1))
     mapGraveYard.Insert(dragon.char, p=dragon.point, obj=dragon)
 
-    quest1 = Person(name=("quest 1"),race=0, aggresive=0, char= "q1" )
+    quest1 = Person(name=("quest 1"),race=0, aggresive=0, char= "door" )
     scene.Insert(char=quest1.char, p=Point(4,0),obj=quest1,canInter=True,collision=True)
     scene.AddSprite(Sprite(quest1.char,[" ### "," #*#"," ### "]))
     quest1.inter.AddInteraction(Interact("hui", "Вы попали в гробницу, хотите войти(y/n)",False, GraveYard, scene,mapGraveYard,pl,Point(5,0),dragon))
 
     quest2 = Person(name=("quest 2"),race=0, aggresive=0, char= "q2" )
     scene.Insert(char=quest2.char, p=Point(7,0),obj=quest2,canInter=True,collision=True)
-    scene.AddSprite(Sprite(quest2.char,[" *** "," ***"," ▨▨▨ "]))
-    quest2.inter.AddInteraction(Interact("penis","Вы пришли во дворец и сели за свой стол, хотите продолжить(y/n)",False,Outside,scene,mapOutside,pl,Point(0,0)))
+    scene.AddSprite(Sprite(quest2.char,[" *** ","▨***▨","▨▨▨▨▨"]))
+    quest2.inter.AddInteraction(Interact("penis","Документы...",True,miniGame,pl))
 
     doorGravyYard = Person("door",0,0,'door')
     doorGravyYard.inter.AddInteraction(Interact("teleport","Do you wanna leave "+colored("GraveYard","yellow")+" (y/n):",False,setMap,scene,mapLobby,pl,Point(0,0)))
+    mapGraveYard.Insert(doorGravyYard.char,Point(0,0),doorGravyYard,True,True)
+
+    doorExitOnLevle = Person("door",0,0,'door')
+    doorExitOnLevle.inter.AddInteraction(Interact("exit","Приоткрыв дверь вас ослепила чистота вощдуха снаружи...", False,exitLvl, pl))
+    scene.Insert(doorExitOnLevle.char,Point(10,0),doorExitOnLevle,True,True)
 
     print(''' ▄▄▄▄▄▄▄▄▄▄▄  ▄         ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄          ▄▄▄▄     
 ▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌       ▄█░░░░▌    
@@ -146,7 +202,9 @@ def chapterOne(pl:Player):
     "\n Вернувшись увидев картину, которая очень сильно ударила его морально. "+colored("Он решил возродить свое королевство и сразиться даже с богами, для возвращения своего дома.","yellow")+", ")
     input("...")
     os.system("cls")
+
     while(True):
+        if (ENDCHAPTER): break
         if pl.health <= 0:
             print("Game Over")
             return

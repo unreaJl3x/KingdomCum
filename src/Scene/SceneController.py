@@ -90,8 +90,7 @@ class Scene:
                 point = Point(pl[0].x + self.GetPointOnDirection(pl[1].obj.lastDirection).x,
                               pl[0].y +self.GetPointOnDirection(pl[1].obj.lastDirection).y
               )
-                print(type(self.map.map[self.map.PointToInt(point)].obj))
-                if self.map.PointToInt(point)<0 or self.map.PointToInt(point) > len(self.map.map): print("Cant use");input();return
+                if self.map.PointToInt(point)<0 or self.map.PointToInt(point) > len(self.map.map) or type(self.map.map[self.map.PointToInt(point)].obj) != Person: print("Cant use");input();return
                 obj = self.map.map[self.map.PointToInt(point)].obj
                 print(f"\nActions wich "+colored(f"[{obj.name}];","yellow"))
 
@@ -123,12 +122,13 @@ class Scene:
                 )
                 pl[1].obj.inventory.print()
                 print("\nMayby inspect any ithem?(num)")
-                choice = input()
                 try:
-                    print(pl[1].obj.inventory.slots[int(choice)])
+                    choice = int(input())
                 except:
                     print("Nothing.....")
-                input()
+                if choice < len(pl[1].obj.inventory.slots) and choice>=0:
+                    print(pl[1].obj.inventory.slots[choice])
+                input("qsdf")
 
     def PrintMap(self):
         layer = 0
@@ -170,14 +170,15 @@ class Scene:
 
     def __win(self, pl:Player):
        # os.system("cls")
-        print(self.enemyFight.point)
         input()
         pl.state = Person.__stateStable__
         self.map.Insert('-', Point(self.map.PointToInt(self.enemyFight.point),0))
-
+        os.system("cls")
+        print("Check youre inventory, mayby grt any ithems. ^_^")
         for i in self.enemyFight.inventory.slots:
             pl.inventory.slots.append(i)
         self.enemyFight = None
+        return
 
 
 
@@ -196,7 +197,8 @@ class Scene:
                         target.fightState = target.__fightStateNull__
                         user.fightState = target.__fightStateStunned__
                         print(f"{user.name} is STUNNED.")
-                        input()
+
+                        return
 
                     hitDmg = (user.attributes.strenght / target.attributes.strenght) * random.randint(0, 5) / 2
                     if target.fightState == Person.__fightStateDefense__: hitDmg = hitDmg*((user.attributes.strenght / target.attributes.strenght)*random.randint(1,5)/5)
@@ -205,7 +207,6 @@ class Scene:
                     print()
                     if int(target.health) <= 0:
                         print(f"{target.name} DIE.")
-                        input()
                         self.__win(user)
                 else: print(f"and miss :) {target.name} under protection Hakari")
             case "d":
@@ -230,10 +231,9 @@ class Scene:
             request = self.enemyFight.char
         else: request = "error"
 
-        for i in self.sprites[request].list:
-            print("               "+i)
-        print(f"    [{self.enemyFight.name}] have health {int(self.enemyFight.health)}")
-        print(f"    [ You ] have health {int(pl.health)}")
+        for i in self.sprites[request].list: print("               "+i)
+        print(f"    [{self.enemyFight.name}][{Person.__getStrOnFightState__(self.enemyFight.state)}] have health {int(self.enemyFight.health)}")
+        print(f"    [ You ][{Person.__getStrOnFightState__(pl.state)}] have health {int(pl.health)}")
 
         print( colored(
                "█████████████████████████████████\n"+
