@@ -33,7 +33,7 @@ def main():
     pl.LevleUp(4)
     print("|     StoryMode     |")
     print("_____________________")
-    print("\r Chapter One\n Chapter Two\n Chapter Three")
+    print("\r Chapter One\n Chapter Two\n Chapter Three\n Chapter Four")
     choice = input("Choice chapter")
 
     match choice:
