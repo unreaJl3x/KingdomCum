@@ -170,7 +170,7 @@ class Scene:
 
     def __win(self, target:Person, user):
        # os.system("cls")
-        if type(target) == Player: print("U DIEEEEEEEEEEEEEEEEEEEEEEEE!");return
+        if type(target) == Player:os.system("exit"); print("U DIEEEEEEEEEEEEEEEEEEEEEEEE!");return
         if target.deathMessage != None: print(target.deathMessage)
         input()
         user.state = Person.__stateStable__
