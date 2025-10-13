@@ -1,10 +1,12 @@
 class Ithem:
-    def __init__(self, name : str, description : str=None, type : int=0,count:int = 1, invisible:bool=False):
+    def __init__(self, name : str, description : str=None, type : int=0,count:int = 1, invisible:bool=False, func=None, *param):
         self.name = name
         self.description = description
         self.type = type
         self.count =count
         self.invisibledToPrint = invisible
+        self.func = func
+        self.param = param
     def __str__(self):
         return f"({self.name}, {self.type}) {self.description}."
 
@@ -49,4 +51,5 @@ class Inventory:
             if i.name == name:
                 return True
         return False
-
+    def Use(self, choice:int):
+        self.slots[int(choice)].func(self.slots[int(choice)].param)

@@ -28,6 +28,7 @@ class Scene:
         self.__fightInteract__.append("Parry (e)")
         self.__fightInteract__.append("Hold (h)")
         self.__fightInteract__.append("Escape (p)")
+        self.__fightInteract__.append("Inventory (i)")
 
         self.sprites = dict()
         self.enemyFight = None
@@ -182,11 +183,10 @@ class Scene:
         return
 
     def FightAction(self,act:str, target:Person, user:Person):
-
-        if user.fightState == user.__fightStateStunned__:
-            user.fightState = user.__fightStateNull__
+        if user.fightState == Person.__fightStateParry__:
+            user.fightState = user.__fightStateStunned__
+            print(f"{user.name} is STUNNED.")
             return
-
         match act.lower():
             case "q":
                 print(f"{user.name} attack {target.name}.",end=" ")
@@ -197,8 +197,6 @@ class Scene:
                         target.fightState = target.__fightStateNull__
                         user.fightState = target.__fightStateStunned__
                         print(f"{user.name} is STUNNED.")
-
-                        return
 
                     hitDmg = (user.attributes.strenght / target.attributes.strenght) * random.randint(0, 5) / 2
                     if target.fightState == Person.__fightStateDefense__: hitDmg = hitDmg*((user.attributes.strenght / target.attributes.strenght)*random.randint(1,5)/5)
@@ -212,14 +210,31 @@ class Scene:
             case "d":
                 print(f"{user.name} becomes protective",end=" ")
                 user.fightState = user.__fightStateDefense__
+
             case "e":
                 print(f"{user.name} raddy to parry.")
                 user.fightState = user.__fightStateParry__
-                return
-            case "h": print(f"{user.name} waiting youre action")
 
-        if user.fightState == Person.__fightStateParry__:
-            user.fightState = user.__fightStateStunned__
+            case "h": print(f"{user.name} waiting {target.name} action")
+
+            case "p":
+                print(f"{user.name} try to escape.")
+                if (user.attributes.agility*0.87/user.attributes.agility) * random.randint(1,5)/5 >= 0.89:
+                    print("Succseful")
+                    self.enemyFight = None
+                print(f"{user.name} stay on place")
+            case "i":
+                if len(user.inventory.slots)>0:
+                    user.inventory.print()
+                    choice = input("What object u want to use?...")
+                    user.Use(int(choice))
+                else:print("Inventory is empty...")
+
+
+        if user.fightState == user.__fightStateStunned__:
+            user.fightState = user.__fightStateNull__
+            return
+
 
     """name_fightscene sprite"""
     def PlFight(self)->str:

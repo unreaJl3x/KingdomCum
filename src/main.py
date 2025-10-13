@@ -14,6 +14,13 @@ def randfomNameConsole():
               "Владимир Путин молодец","Жужа или Крэкеры?"]
     os.system("title "+titles[random.randint(0,len(titles)-1)])
 
+def Heal(param):
+    l=[]
+    for i in param:
+        l.append(i)
+    l[0].health+=l[1]
+    print(f"{l[0].name} regenerate {l[1]} HP")
+
 def logo():
     print(""" 
 ____  __.__                   .___             _________                
@@ -37,6 +44,7 @@ def main():
     choice = input("Choice chapter")
 
     pl = Player(input("Enter youre name... "), 0)
+    pl.inventory.Add(Ithem("Heal","Regenerate 5 HP.",1,1,False,Heal,pl,5))
     pl.LevleUp(4)
     os.system("cls")
     match choice:

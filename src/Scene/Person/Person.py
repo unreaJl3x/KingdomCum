@@ -86,3 +86,5 @@ class Person(Entity):
 
     def AddInteraction(self, interactName:str, action:str):
         self.inter.AddInteraction(Interact(interactName,action))
+    def Use(self, choice:int):
+        self.inventory.Use(choice)
