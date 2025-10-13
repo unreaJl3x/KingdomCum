@@ -37,7 +37,7 @@ def main():
     choice = input("Choice chapter")
 
     pl = Player(input("Enter youre name... "), 0)
-    pl.LevleUp(4)
+    pl.LevleUp(8)
     os.system("cls")
     match choice:
         case "1":
@@ -61,4 +61,5 @@ def main():
             chapterFour(pl)
         case "4":
             chapterFour(pl)
+
 main()
