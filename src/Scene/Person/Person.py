@@ -68,6 +68,7 @@ class Person(Entity):
         self.deathMessage = deathMessage
         self.levle = 1
         self.startFightMessage = startFightMessage
+        self.lastAct=None
 
     def LevleUp(self,lvl:int=1):
         self.levle += lvl
@@ -88,3 +89,6 @@ class Person(Entity):
         self.inter.AddInteraction(Interact(interactName,action))
     def Use(self, choice:int):
         self.inventory.Use(choice)
+        self.inventory.slots[choice].count-=1
+        if self.inventory.slots[choice].count <= 0:
+            self.inventory.slots.remove(choice)

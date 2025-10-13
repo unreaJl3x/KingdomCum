@@ -170,6 +170,7 @@ class Scene:
 
     def __win(self, target:Person, user):
        # os.system("cls")
+        user.lastAct=None
         if type(target) == Player: print("GameOver");exit(-1)
         if target.deathMessage != None: print(target.deathMessage)
         input()
@@ -183,6 +184,7 @@ class Scene:
         return
 
     def FightAction(self,act:str, target:Person, user:Person):
+        user.lastAct=act
         if user.fightState == Person.__fightStateParry__:
             user.fightState = user.__fightStateStunned__
             print(f"{user.name} is STUNNED.")
@@ -225,6 +227,7 @@ class Scene:
                 print(f"{user.name} stay on place")
             case "i":
                 if len(user.inventory.slots)>0:
+                    print(f"{user.name} watch in his Inventory:")
                     user.inventory.print()
                     choice = input("What object u want to use?...")
                     user.Use(int(choice))
