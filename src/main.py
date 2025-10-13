@@ -1,3 +1,5 @@
+import os
+
 from chapterTwo import *
 from chapterOne import *
 from chapterThree import *
@@ -9,7 +11,7 @@ def randfomNameConsole():
     "Ты и ДжоДжо уже целовались? Ещё нет, так ведь? Твой первый поцелуй принадлежит не ему! Это был я, Дио!",
               "Я РУССКИЙ!!!",
               "Здравствуйте. Это Я. СТУЛ АЛЕКСЕЯ НАВАЛЬНОГО!",
-              "Владимир Путин молодец"]
+              "Владимир Путин молодец","Жужа или Крэкеры?"]
     os.system("title "+titles[random.randint(0,len(titles)-1)])
 
 def logo():
@@ -28,14 +30,15 @@ def main():
     logo()
     print("Enter any key to start....",end="")
     input("")
-    #os.system("cls")
-    pl = Player("hui",0)
-    pl.LevleUp(4)
+
     print("|     StoryMode     |")
     print("_____________________")
     print("\r Chapter One\n Chapter Two\n Chapter Three\n Chapter Four")
     choice = input("Choice chapter")
 
+    pl = Player(input("Enter youre name... "), 0)
+    pl.LevleUp(4)
+    os.system("cls")
     match choice:
         case "1":
             chapterOne(pl)

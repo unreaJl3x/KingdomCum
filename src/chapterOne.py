@@ -81,19 +81,23 @@ def exitLvl(params):
     l=[]
     for i in params:
         l.append(i)
-    if l[0].inventory.HaveIs("quest2") and l[0].inventory.HaveIs("Rapire blue rose"):
-        ENDCHAPTER = True
+    if l[0].inventory.HaveIs("quest2") :
+        if l[0].inventory.HaveIs("Rapire blue rose"):
+            l[0].inventory.Add(Ithem("canexit",""))
+        else:
+            print("У васс остались незаконченные дела, вы уверены что хотите уйти?(y/n) ")
+            if input() == 'y':
+                l[0].inventory.Add(Ithem("canexit",""))
     else: print("У вас остались незаконченные дела...")
 
 def chapterOne(pl:Player):
-    ENDCHAPTER = False
+    #ENDCHAPTER = False
     scene= Scene(5,3)
     mapLobby = Map(5,3)
     scene.map = mapLobby
     scene.Insert(pl.char, p=Point(0,0),obj=pl)
     mapGraveYard = Map(5,3)
     mapOutside = Map(7,4)
-
     scene.AddSprite(Sprite("dr", ["12345","54321","09876"]))
     scene.AddSprite(Sprite("dragon_fightscene", ["""                ..                                                              ....::::....                       
               .=*=..                                                 ..::--====+++++++++++++++++====--::.. ...     
@@ -201,7 +205,7 @@ def chapterOne(pl:Player):
     os.system("cls")
 
     while(True):
-        if (ENDCHAPTER): break
+        if (pl.inventory.HaveIs("canexit")): return
         if pl.health <= 0:
             print("Game Over")
             return

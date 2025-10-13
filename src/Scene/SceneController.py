@@ -169,7 +169,7 @@ class Scene:
 
     def __win(self, target:Person, user):
        # os.system("cls")
-        if type(target) == Player:os.system("exit"); print("U DIEEEEEEEEEEEEEEEEEEEEEEEE!");return
+        if type(target) == Player: print("GameOver");exit(-1)
         if target.deathMessage != None: print(target.deathMessage)
         input()
         user.state = Person.__stateStable__
@@ -182,7 +182,7 @@ class Scene:
         return
 
     def FightAction(self,act:str, target:Person, user:Person):
-        if target.startFightMessage != None: print(target.startFightMessage);target.startFightMessage = None
+
         if user.fightState == user.__fightStateStunned__:
             user.fightState = user.__fightStateNull__
             return
@@ -224,7 +224,7 @@ class Scene:
     """name_fightscene sprite"""
     def PlFight(self)->str:
         pl = self.GetPlayer()
-
+        if self.enemyFight.startFightMessage != None: print(self.enemyFight.startFightMessage);self.enemyFight.startFightMessage = None
         if f"{self.enemyFight.name}_fightscene" in self.sprites.keys():
             request = f"{self.enemyFight.name}_fightscene"
         elif f"{self.enemyFight.char}" in self.sprites.keys():
